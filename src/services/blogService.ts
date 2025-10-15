@@ -1,12 +1,35 @@
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import slugify from "slugify";
+import { ErrorResponse } from "./errorResponse";
 
 export class BlogService{
 
-    async createBlog({title, content, featuredImage,imageId, status, userId}: any){
+    async createBlog({title, content, featuredImage,imageId, status, categoryName, userId}: any){
         const slug = slugify(title, {lower: true, strict: true});
         try {
+            if(!categoryName) {
+                console.error("Prisma Service ::CategoryName :: createBlog :: error");
+                return ErrorResponse("Category is Required", 401);
+            }
+            
+            const normalizedCategory = categoryName.trim().toLowerCase();
+
+            let category = await prisma.category.findFirst({
+                where: {
+                    name : { equals: normalizedCategory, mode: "insensitive"},
+                },
+            });
+
+            if(!category){
+                category = await prisma.category.create({
+                    data: {
+                        name: normalizedCategory,
+                        displayName: normalizedCategory.toUpperCase(),
+                    },
+                });
+            }
+
             return await prisma.blog.create({
                 data: {
                     title,
@@ -16,6 +39,7 @@ export class BlogService{
                     featuredImage,
                     status,
                     authorId: userId,
+                    categoryId: category.id,
                 },
             });
         } catch (error) {
@@ -24,12 +48,28 @@ export class BlogService{
         }
     }
 
-    async updateBlog(slug: string, {title, content, featuredImage, status}: any){
+    async updateBlog(slug: string, {title, content, featuredImage, status, categoryName}: any){
         try {
             const existingBlog = await this.getBlog(slug);
             if(!existingBlog) throw new Error("Blog Not Found");
     
             const newSlug = slugify(title, {lower: true, strict: true});
+            const normalizedCategory = categoryName.trim().toLowerCase();
+
+            let category = await prisma.category.findFirst({
+                where: {
+                    name : { equals: normalizedCategory, mode: "insensitive"},
+                },
+            });
+
+            if(!category){
+                category = await prisma.category.create({
+                    data: {
+                        name: normalizedCategory,
+                        displayName: normalizedCategory.toUpperCase(),
+                    },
+                });
+            }
     
             const updatedBlog = await prisma.blog.update({
                 where: {slug},
@@ -38,6 +78,7 @@ export class BlogService{
                     content,
                     featuredImage,
                     status,
+                    categoryId: category.id,
                     slug: newSlug,
                 },
             });

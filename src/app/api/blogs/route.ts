@@ -18,13 +18,12 @@ export async function POST(req: NextRequest) {
 
         if(!parsed.success){
             console.log("Request body:", body);
-            console.log("UserId from auth:", userId);
-            console.log(parsed.error.issues[0]?.message)
+            console.log(parsed.error.issues[0]?.message);
 
             return ErrorResponse(parsed.error.issues[0]?.message || "Invalid Input", 400);
         }
 
-        const {title, content, featuredImage, status, imageId} = parsed.data;
+        const {title, content, featuredImage, status, imageId, categoryName} = parsed.data;
 
         const newBlog = await service.createBlog({
             title,
@@ -33,6 +32,7 @@ export async function POST(req: NextRequest) {
             status,
             imageId,
             userId,
+            categoryName,
         });
 
         return SuccessResponse(newBlog, 201, "Blog created successfully");

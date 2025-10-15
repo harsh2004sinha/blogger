@@ -8,4 +8,5 @@ export const BlogSchema = z.object({
     featuredImage: z.string().url("Invalid Image URL").optional(),
     status: z.boolean(),
     imageId: z.string().optional(),
+    categoryName: z.string(),
 });
