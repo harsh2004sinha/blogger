@@ -38,7 +38,7 @@ export class BlogService{
                     content,
                     featuredImage,
                     status,
-                    newSlug,
+                    slug: newSlug,
                 },
             });
     
