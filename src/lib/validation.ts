@@ -7,6 +7,5 @@ export const BlogSchema = z.object({
               .max(500, "Content must be less than 500 characters long"),
     featuredImage: z.string().url("Invalid Image URL").optional(),
     status: z.boolean(),
-    authorId: z.string(),
     imageId: z.string().optional(),
 });
