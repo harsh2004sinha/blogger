@@ -5,7 +5,7 @@ import { ErrorResponse } from "@/services/errorResponse";
 import { SuccessResponse } from "@/services/succesResponse";
 import { BlogSchema } from "@/lib/validation";
 
-export async function GET({params}: {params: {slug: string}}){
+export async function GET(req: NextRequest, {params}: {params: {slug: string}}){
     try {
         const post = await service.getBlog(params.slug);
 
@@ -42,7 +42,7 @@ export async function PUT(req:NextRequest, {params} : {params : {slug: string}})
     }
 }
 
-export async function DELETE({params} : {params : {slug : string}}) {
+export async function DELETE(req: NextRequest, {params} : {params : {slug : string}}) {
     try {
         const { userId } = await auth();
         if(!userId) return ErrorResponse("Unauthorized User", 401);

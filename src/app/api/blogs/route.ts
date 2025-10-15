@@ -8,12 +8,21 @@ import { BlogSchema } from "@/lib/validation";
 export async function POST(req: NextRequest) {
     try {
         const { userId } = await auth();
-        if(!userId) return ErrorResponse("Unauthorized User", 401);
+        if(!userId){
+            console.log("Unauthorized User");
+            return ErrorResponse("Unauthorized User", 401);
+        }
 
         const body = await req.json();
         const parsed = BlogSchema.safeParse(body);
 
-        if(!parsed.success) return ErrorResponse(parsed.error.issues[0]?.message || "Invalid Input", 400);
+        if(!parsed.success){
+            console.log("Request body:", body);
+            console.log("UserId from auth:", userId);
+            console.log(parsed.error.issues[0]?.message)
+
+            return ErrorResponse(parsed.error.issues[0]?.message || "Invalid Input", 400);
+        }
 
         const {title, content, featuredImage, status, imageId} = parsed.data;
 
@@ -23,7 +32,7 @@ export async function POST(req: NextRequest) {
             featuredImage,
             status,
             imageId,
-            authorId: userId,
+            userId,
         });
 
         return SuccessResponse(newBlog, 201, "Blog created successfully");
