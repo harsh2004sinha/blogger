@@ -1,4 +1,3 @@
-// components/SingleBlogDisplay.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -6,16 +5,15 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
 import dayjs from "dayjs";
+import { LoaderOne } from "./ui/loader";
 
 type Blog = {
   id: string;
   slug: string;
   title: string;
   content: string;
-  excerpt?: string;
   featuredImage?: string;
   category?: string;
-  tags?: string[];
   author?: { id: string; name?: string; avatar?: string; email?: string };
   publishedAt?: string;
   status?: boolean;
@@ -103,33 +101,33 @@ export default function SingleBlogDisplay({ slug }: Props) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <div className="text-gray-500">Loading...</div>
+        <LoaderOne/>
       </div>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-blue-50 to-white">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-blue-500 to-gray-700">
         <div className="max-w-2xl text-center">
           <h2 className="text-2xl font-semibold mb-2">Post not found</h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-200 mb-6">
             {error ?? "The requested blog could not be loaded."}
           </p>
           <div className="flex justify-center gap-3">
             <button
               onClick={() => router.push("/blogs")}
-              className="px-4 py-2 rounded bg-blue-600 text-white"
+              className="px-4 py-2 rounded bg-blue-600 text-white hover:cursor-pointer hover:bg-blue-400"
             >
               Back to blogs
             </button>
             {!isSignedIn ? (
               <SignInButton mode="modal">
-                <button className="px-4 py-2 rounded border">Sign in</button>
+                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">Sign in</button>
               </SignInButton>
             ) : (
               <SignOutButton>
-                <button className="px-4 py-2 rounded border">Sign out</button>
+                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">Sign out</button>
               </SignOutButton>
             )}
           </div>
@@ -139,10 +137,10 @@ export default function SingleBlogDisplay({ slug }: Props) {
   }
 
   return (
-    <article className="min-h-screen bg-gradient-to-b from-white to-slate-50 py-12 px-6">
+    <article className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-12 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
-        <div className="text-sm text-gray-500 mb-4">
+        <div className="text-sm text-gray-900 mb-4">
           <button onClick={() => router.push("/blogs")} className="underline">
             Blogs
           </button>
@@ -213,20 +211,6 @@ export default function SingleBlogDisplay({ slug }: Props) {
                   </div>
                   {readingTime && <div>• {readingTime}</div>}
                 </div>
-
-                {/* tags */}
-                {blog.tags?.length ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {blog.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
               </div>
 
               {/* Owner controls */}
