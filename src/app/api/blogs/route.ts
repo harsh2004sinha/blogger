@@ -23,12 +23,22 @@ export async function POST(req: NextRequest) {
             return ErrorResponse(parsed.error.issues[0]?.message || "Invalid Input", 400);
         }
 
-        const {title, content, featuredImage, status, imageId, categoryName} = parsed.data;
+        const {title, content, featuredImage, status, categoryName} = parsed.data;
+
+        let imageUrl: string | null = null;
+        let imageId: string | null = null;
+
+        if(featuredImage) {
+            const uploadResult = await service.uploadFile(featuredImage);
+            if (uploadResult && Array.isArray(uploadResult)) {
+                [imageUrl, imageId] = uploadResult;
+            }
+        }
 
         const newBlog = await service.createBlog({
             title,
             content,
-            featuredImage,
+            featuredImage: imageUrl,
             status,
             imageId,
             userId,

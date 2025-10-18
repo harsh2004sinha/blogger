@@ -132,7 +132,7 @@ export class BlogService{
     async uploadFile(filePath: string){
         try {
             const res = await cloudinary.uploader.upload(filePath, {folder: "blogs"});
-            return res.secure_url;
+            return [res.secure_url, res.public_id];
         } catch (error) {
             console.error("Prisma Service :: uploadFile :: error")
             return null;
