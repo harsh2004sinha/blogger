@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -8,7 +8,16 @@ import {
   useMotionValueEvent,
 } from "motion/react";
 import { cn } from "@/lib/utils";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useUser,
+  useAuth
+} from "@clerk/nextjs";
+import axios from "axios";
 
 export const FloatingNav = ({
   navItems,
@@ -22,6 +31,8 @@ export const FloatingNav = ({
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
+  const { isLoaded: userLoaded, isSignedIn, user } = useUser();
+  const { getToken, isLoaded: authLoaded } = useAuth();
 
   const [visible, setVisible] = useState(false);
 
@@ -40,6 +51,62 @@ export const FloatingNav = ({
       }
     }
   });
+
+  useEffect(() => {
+    // Wait until Clerk client hooks are loaded and user is signed in
+    if (!userLoaded || !authLoaded) {
+      console.log("Clerk not loaded yet", { userLoaded, authLoaded });
+      return;
+    }
+    if (!isSignedIn) {
+      console.log("User not signed in yet");
+      return;
+    }
+
+    let mounted = true;
+    (async () => {
+      try {
+        console.log("Effect triggered: userLoaded/authLoaded/isSignedIn", { userLoaded, authLoaded, isSignedIn, userId: user?.id });
+
+        // Avoid repeated calls from same browser for same user
+        const storageKey = `userSynced:${user?.id}`;
+        if (user?.id && localStorage.getItem(storageKey)) {
+          console.log("Skipping create-user, already synced in this browser for", user.id);
+          return;
+        }
+
+        // get a session JWT
+        const token = await getToken();
+        console.log("Got token length", token?.length);
+
+        if (!mounted || !token) return;
+
+        const res = await axios.post(
+          "/api/create-user",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("User sync success:", res.data);
+        if (user?.id) localStorage.setItem(storageKey, "1");
+      } catch (err: any) {
+        if (axios.isAxiosError(err)) {
+          console.error("create-user failed:", err.response?.status, err.response?.data);
+        } else {
+          console.error("Unexpected error calling create-user:", err);
+        }
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [userLoaded, authLoaded, isSignedIn, getToken, user?.id]);
 
   return (
     <AnimatePresence mode="wait">
@@ -99,13 +166,13 @@ export const FloatingNav = ({
           </SignUpButton>
         </SignedOut>
         <SignedIn>
-            <a
+          <a
             href="/my-blogs"
             className="text-sm font-medium text-neutral-600 dark:text-neutral-100 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
           >
             My Blogs
           </a>
-            <UserButton/>
+          <UserButton />
         </SignedIn>
       </motion.div>
     </AnimatePresence>
