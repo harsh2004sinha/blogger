@@ -1,39 +1,66 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  SignInButton,
-  SignOutButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { LoaderOne } from "./ui/loader";
+import axios from "axios";
+import { useAuth } from "@clerk/nextjs";
 
 type Blog = {
   id: string;
+  authorId: string;
   title: string;
-  category?: string;
+  category?: {
+    displayName: string;
+  };
   featuredImage?: string;
   status: boolean;
 };
 
-const dummyBlogs: Blog[] = Array.from({ length: 21 }).map((_, i) => ({
-  id: `blog-${i + 1}`,
-  title: `Sample Blog ${i + 1}`,
-  category: ["Tech", "Food", "Travel", "Lifestyle"][i % 4],
-  featuredImage: `https://picsum.photos/seed/blog${i + 1}/600/400`,
-  status: i % 2 === 0,
-}));
-
 const MyBlogsPage: React.FC = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
   const { isSignedIn, isLoaded, user } = useUser();
   const router = useRouter();
   const [visibleCount, setVisibleCount] = useState(9);
 
+  const { getToken } = useAuth();
+
+  useEffect(() => {
+    let mounted = true;
+    if (!isLoaded || !user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchBlogs = async () => {
+      setLoading(true);
+      try {
+        const token = await getToken();
+        const res = await axios.get("/api/blogs");
+        console.log("GET /api/blogs response (auth):", res.data);
+        const allBlogs: Blog[] = res.data?.data || res.data || [];
+        const filtered = allBlogs.filter((blog) => blog.authorId === user.id);
+        if (mounted) setBlogs(filtered);
+      } catch (error) {
+        console.error("Error fetching My Blogs (auth)", error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+
+    return () => {
+      mounted = false;
+    };
+  }, [isLoaded, user, getToken]);
+
   if (!isLoaded)
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-500 to-gray-700 text-white">
-        <LoaderOne/>
+        <LoaderOne />
       </div>
     );
 
@@ -70,7 +97,7 @@ const MyBlogsPage: React.FC = () => {
     );
   }
 
-  const visibleBlogs = dummyBlogs.slice(0, visibleCount);
+  const visibleBlogs = blogs.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-16 px-6">
@@ -140,7 +167,7 @@ const MyBlogsPage: React.FC = () => {
 
               <div className="p-4">
                 <p className="text-xs font-medium text-blue-500 mb-1">
-                  {b.category || "Uncategorized"}
+                  {b.category?.displayName || "Uncategorized"}
                 </p>
                 <h3 className="text-lg font-semibold mb-2 dark:text-white">
                   {b.title}
@@ -174,7 +201,7 @@ const MyBlogsPage: React.FC = () => {
         </div>
 
         {/* SHOW MORE BUTTON */}
-        {visibleCount < dummyBlogs.length && (
+        {visibleCount < blogs.length && (
           <div className="flex justify-center mt-12">
             <button
               onClick={() => setVisibleCount((prev) => prev + 9)}
@@ -186,8 +213,8 @@ const MyBlogsPage: React.FC = () => {
         )}
 
         {/* END MESSAGE */}
-        {visibleCount >= dummyBlogs.length && (
-          <p className="text-center text-gray-500 mt-10">
+        {visibleCount >= blogs.length && (
+          <p className="text-center text-gray-200 mt-10">
             You’ve reached the end!
           </p>
         )}
