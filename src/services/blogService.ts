@@ -120,9 +120,14 @@ export class BlogService{
     async getBlogs(filters: any = {}){
         try {
             return await prisma.blog.findMany({
+                include: {
+                    category: true,
+                    author: true,
+                },
                 where: filters,
-                orderBy: {createdAt: "desc"}
-            })
+                orderBy: {createdAt: "desc"},
+                take: 20,
+            });
         } catch (error) {
             console.error("Prisma Service :: getBlogs :: error");
             return [];

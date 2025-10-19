@@ -3,12 +3,12 @@
 import { motion } from "motion/react";
 import React from "react";
 import { AuroraBackground } from "./ui/AuroraBackground";
-import { CarouselCards } from "./CarouselCards";
 import { useRouter } from "next/navigation";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { CarouselCards } from "./CarouselCards";
 
 export function HeroSection() {
-    const router = useRouter();
+  const router = useRouter();
 
   return (
     <>
@@ -67,9 +67,9 @@ export function HeroSection() {
           }}
         >
           <div className="text-3xl md:text-7xl font-bold dark:text-white text-left ml-6">
-            Recent Blogs:
+            <div className="mb-10"> Recent Blogs: </div>
+            <CarouselCards/>
           </div>
-          <CarouselCards />
         </motion.div>
       </div>
     </>

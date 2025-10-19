@@ -1,88 +1,111 @@
 "use client";
 
-import React from "react";
-import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
+import slugify from "slugify";
+
+type Blog = {
+  id: string,
+  title: string,
+  category: {
+    displayName: string,
+  },
+  featuredImage?: string | null,
+  createdAt: string,
+  slug: string
+};
 
 export function CarouselCards() {
-  const cards = data.map((card, index) => (
-    <Card key={card.src} card={card} index={index} />
-  ));
+  const router = useRouter();
+  const [blogs, setBlogs] = useState<Blog[]> ([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean> (true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("api/blogs");
+        console.log(res);
+        setBlogs(res.data.data || []);
+      } catch (error) {
+        console.error("Error in Fecthing Blogs :: CarouselCards", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  const prev = () =>
+    setCurrentIndex((prev) => (prev === 0 ? blogs.length - 1 : prev - 1));
+  const next = () =>
+    setCurrentIndex((prev) => (prev === blogs.length - 1 ? 0 : prev + 1));
+
+  const goToBlog = (title: string) => {
+    const slug = slugify(title, {lower: true, strict: true});
+    router.push(`/blogs/${slug}`);
+  };
 
   return (
-    <div className="w-full h-full">
-      <Carousel items={cards} />
+    <div className="relative w-full max-w-6xl">
+      <div className="overflow-hidden rounded-3xl shadow-lg relative">
+        <motion.div
+          className="flex transition-transform duration-700 ease-in-out"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+          }}
+        >
+          {blogs.map((blog, i) => (
+            <div
+              key={i}
+              className="min-w-full flex-shrink-0 relative cursor-pointer"
+              onClick={() => goToBlog(blog.title)}
+            >
+              <img
+                src={blog.featuredImage ?? undefined}
+                alt={blog.title}
+                className="w-full h-[450px] object-cover brightness-90 hover:brightness-100 transition-all duration-300"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white px-6 py-4">
+                <div className="text-2xl font-semibold">{blog.title}</div>
+                <div className="text-sm opacity-80">{blog.category?.displayName ?? "Unknown"}</div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      <button
+        onClick={prev}
+        className="absolute top-1/2 left-4 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:scale-110 transition"
+      >
+        <ChevronLeft className="w-6 h-6 text-black dark:text-white" />
+      </button>
+
+      <button
+        onClick={next}
+        className="absolute top-1/2 right-4 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:scale-110 transition"
+      >
+        <ChevronRight className="w-6 h-6 text-black dark:text-white" />
+      </button>
+
+      <div className="flex justify-center gap-3 mt-6">
+        {blogs.map((_, i) => (
+          <div
+            key={i}
+            onClick={() => setCurrentIndex(i)}
+            className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+              currentIndex === i
+                ? "bg-black dark:bg-white scale-125"
+                : "bg-gray-400"
+            }`}
+          ></div>
+        ))}
+      </div>
     </div>
   );
 }
-
-const DummyContent = () => {
-  return (
-    <>
-      {[...new Array(3).fill(1)].map((_, index) => {
-        return (
-          <div
-            key={"dummy-content" + index}
-            className="bg-[#F5F5F7] dark:bg-neutral-800 p-8 md:p-14 rounded-3xl mb-4"
-          >
-            <p className="text-neutral-600 dark:text-neutral-400 text-base md:text-2xl font-sans max-w-3xl mx-auto">
-              <span className="font-bold text-neutral-700 dark:text-neutral-200">
-                The first rule of Apple club is that you boast about Apple club.
-              </span>{" "}
-              Keep a journal, quickly jot down a grocery list, and take amazing
-              class notes. Want to convert those notes to text? No problem.
-              Langotiya jeetu ka mara hua yaar is ready to capture every
-              thought.
-            </p>
-            <img
-              src="https://assets.aceternity.com/macbook.png"
-              alt="Macbook mockup from Aceternity UI"
-              height="500"
-              width="500"
-              className="md:w-1/2 md:h-1/2 h-full w-full mx-auto object-contain"
-            />
-          </div>
-        );
-      })}
-    </>
-  );
-};
-
-const data = [
-  {
-    category: "Artificial Intelligence",
-    title: "You can do more with AI.",
-    src: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=3556&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-  {
-    category: "Productivity",
-    title: "Enhance your productivity.",
-    src: "https://images.unsplash.com/photo-1531554694128-c4c6665f59c2?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-  {
-    category: "Product",
-    title: "Launching the new Apple Vision Pro.",
-    src: "https://images.unsplash.com/photo-1713869791518-a770879e60dc?q=80&w=2333&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-
-  {
-    category: "Product",
-    title: "Maps for your iPhone 15 Pro Max.",
-    src: "https://images.unsplash.com/photo-1599202860130-f600f4948364?q=80&w=2515&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-  {
-    category: "iOS",
-    title: "Photography just got better.",
-    src: "https://images.unsplash.com/photo-1602081957921-9137a5d6eaee?q=80&w=2793&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-  {
-    category: "Hiring",
-    title: "Hiring for a Staff Software Engineer",
-    src: "https://images.unsplash.com/photo-1511984804822-e16ba72f5848?q=80&w=2048&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    content: <DummyContent />,
-  },
-];
