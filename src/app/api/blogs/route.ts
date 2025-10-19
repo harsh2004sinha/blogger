@@ -8,41 +8,58 @@ import { BlogSchema } from "@/lib/validation";
 export async function POST(req: NextRequest) {
     try {
         const { userId } = await auth();
-        if(!userId){
+        if (!userId) {
             console.log("Unauthorized User");
             return ErrorResponse("Unauthorized User", 401);
         }
 
-        const body = await req.json();
-        const parsed = BlogSchema.safeParse(body);
+        const form = await req.formData();
 
-        if(!parsed.success){
-            console.log("Request body:", body);
-            console.log(parsed.error.issues[0]?.message);
+
+        const title = form.get("title") as string | null;
+        const content = form.get("content") as string | null;
+        const statusRaw = form.get("status") as string | null;
+        const categoryName = form.get("categoryName") as string | null;
+
+        const status = statusRaw === "true";
+
+        const file = form.get("featuredImage") as unknown as File | null;
+
+        const payloadForValidation = { title, content, status, categoryName };
+
+        const parsed = BlogSchema.safeParse(payloadForValidation);
+
+        if (!parsed.success) {
+            console.log("Request body:", payloadForValidation);
+            console.log("Request body validation error: ", parsed.error.issues[0]?.message);
 
             return ErrorResponse(parsed.error.issues[0]?.message || "Invalid Input", 400);
         }
 
-        const {title, content, featuredImage, status, categoryName} = parsed.data;
-
         let imageUrl: string | null = null;
         let imageId: string | null = null;
 
-        if(featuredImage) {
-            const uploadResult = await service.uploadFile(featuredImage);
+        if (file && (file as any).size) {
+            const arrayBuffer = await (file as any).arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const b64 = buffer.toString("base64");
+            const mime = (file as any).type || "application/octet-stream";
+            const dataUri = `data:${mime};base64,${b64}`;
+
+            const uploadResult = await service.uploadFile(dataUri);
             if (uploadResult && Array.isArray(uploadResult)) {
                 [imageUrl, imageId] = uploadResult;
             }
         }
 
         const newBlog = await service.createBlog({
-            title,
-            content,
+            title: parsed.data.title,
+            content: parsed.data.content,
             featuredImage: imageUrl,
-            status,
+            status: parsed.data.status,
             imageId,
             userId,
-            categoryName,
+            categoryName: parsed.data.categoryName,
         });
 
         return SuccessResponse(newBlog, 201, "Blog created successfully");
