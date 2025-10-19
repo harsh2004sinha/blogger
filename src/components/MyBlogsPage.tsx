@@ -12,6 +12,7 @@ type Blog = {
   category?: { displayName: string };
   featuredImage?: string;
   status: boolean;
+  slug: string;
 };
 
 const MyBlogsPage: React.FC = () => {
@@ -22,6 +23,23 @@ const MyBlogsPage: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(9);
 
   const { getToken } = useAuth();
+
+  const handleDelete = async (e: React.MouseEvent, slug: string, title: string) => {
+    e.stopPropagation();
+
+    const confirmed = window.confirm(`Are you sure you want to delete ${title}? This action cannot be undone.`);
+    if(!confirmed) return;
+
+    try {
+      await axios.delete(`/api/blogs/${slug}`);
+      
+      setBlogs((prev) => prev.filter((x) => x.slug !== slug));
+
+      alert(`"${title}" has been deleted successfully.`)
+    } catch (error) {
+      console.error("Error while Deleting the Blog :: MyBlogs", error);
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -141,8 +159,8 @@ const MyBlogsPage: React.FC = () => {
               {visibleBlogs.map((b) => (
                 <div
                   key={b.id}
-                  onClick={() => router.push(`/blogs/${b.id}`)}
-                  className="cursor-pointer rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 hover:scale-105 transition-transform duration-300 relative"
+                  onClick={() => router.push(`/blogs/${b.slug}`)}
+                  className="rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 hover:scale-105 transition-transform duration-300 relative"
                 >
                   <div className="relative">
                     <img src={b.featuredImage || "/placeholder.jpg"} alt={b.title} className="h-56 w-full object-cover" />
@@ -169,18 +187,15 @@ const MyBlogsPage: React.FC = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            alert(`Edit ${b.title}`);
+                            router.push(`/blogs/${b.slug}/edit`)
                           }}
-                          className="px-3 py-1 border rounded-md text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
+                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-700"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            alert(`Delete ${b.title}`);
-                          }}
-                          className="px-3 py-1 border rounded-md text-xs text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          onClick={(e) => handleDelete(e, b.slug, b.title)}
+                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-red-700 hover:bg-red-200 dark:hover:bg-gray-700"
                         >
                           Delete
                         </button>
