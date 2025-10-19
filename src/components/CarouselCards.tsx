@@ -15,7 +15,8 @@ type Blog = {
   },
   featuredImage?: string | null,
   createdAt: string,
-  slug: string
+  slug: string,
+  status: boolean,
 };
 
 export function CarouselCards() {
@@ -29,7 +30,10 @@ export function CarouselCards() {
       try {
         const res = await axios.get("api/blogs");
         console.log(res);
-        setBlogs(res.data.data || []);
+        const allBlogs: Blog[] = res.data?.data || res.data || [];
+        const filteredBlogs: Blog[] = allBlogs.filter((blog) => blog.status === true);
+
+        setBlogs(filteredBlogs);
       } catch (error) {
         console.error("Error in Fecthing Blogs :: CarouselCards", error);
       } finally {
