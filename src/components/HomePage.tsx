@@ -68,7 +68,33 @@ export function HeroSection() {
         >
           <div className="text-3xl md:text-7xl font-bold dark:text-white text-left ml-6">
             <div className="mb-10"> Recent Blogs: </div>
-            <CarouselCards/>
+            <CarouselCards />
+
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={() => router.push("/blogs")}
+                className="group flex items-center gap-2 px-4 py-1.5 rounded-full 
+               bg-gradient-to-r from-blue-500 to-gray-700 text-white 
+               text-sm font-medium shadow-sm hover:shadow-md 
+               transition-all duration-300 hover:scale-105 hover:cursor-pointer"
+              >
+                <span>View All Blogs</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.8}
+                  stroke="currentColor"
+                  className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17.25 8.25L21 12l-3.75 3.75M3 12h18"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>
