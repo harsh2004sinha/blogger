@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
 import dayjs from "dayjs";
-import { LoaderOne } from "./ui/loader";
+import { LoaderOne } from "./ui/Loader";
 
 type Blog = {
   id: string;

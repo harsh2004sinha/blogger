@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { LoaderOne } from "./ui/loader";
 
 interface Blog {
   id: string;

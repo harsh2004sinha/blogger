@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import SkeletonPage from "./SkeletonPage";
+import SkeletonPage from "./ui/SkeletonUI";
 
 // Dynamically load Editor and disable SSR to avoid hydration issues
 const Editor = dynamic(

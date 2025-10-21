@@ -5,7 +5,7 @@ import React from "react";
 import { AuroraBackground } from "./ui/AuroraBackground";
 import { useRouter } from "next/navigation";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
-import { CarouselCards } from "./CarouselCards";
+import { CarouselCards } from "./ui/CarouselCards";
 
 export function HeroSection() {
   const router = useRouter();
