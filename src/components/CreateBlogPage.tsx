@@ -1,10 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import axios from "axios";
-import { Editor } from "@tinymce/tinymce-react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import SkeletonPage from "./SkeletonPage";
+
+// Dynamically load Editor and disable SSR to avoid hydration issues
+const Editor = dynamic(
+  () => import("@tinymce/tinymce-react").then((mod) => mod.Editor),
+  { ssr: false }
+);
 
 type Category = {
   id: string;
@@ -12,9 +19,26 @@ type Category = {
   displayName: string;
 };
 
+function FullscreenLoadingOverlay({ text = "Loading..." }: { text?: string }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="inline-flex items-center gap-3 rounded-lg bg-white/95 px-5 py-4 shadow-lg">
+        <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="4" />
+          <path d="M22 12a10 10 0 00-10-10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+        </svg>
+        <div className="text-sm font-medium">{text}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function CreateBlogPage() {
   const { isSignedIn, user } = useUser();
   const router = useRouter();
+
+  // mounted prevents rendering until client mount -> avoids SSR/CSR mismatch
+  const [mounted, setMounted] = useState(false);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -28,16 +52,23 @@ export default function CreateBlogPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!isSignedIn) {
+    setMounted(true);
+  }, []);
+
+  // Only do the redirect after we've mounted (so it's purely client-side)
+  useEffect(() => {
+    if (!mounted) return;
+    if (isSignedIn === false) {
       router.push("/sign-in");
     }
-  }, [isSignedIn, router]);
+  }, [mounted, isSignedIn, router]);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await axios.get("/api/categories");
-        setCategories(res.data || []);
+        const list = res.data?.data ?? res.data ?? [];
+        setCategories(Array.isArray(list) ? list : []);
       } catch (err) {
         console.error("Failed to load categories:", err);
       }
@@ -96,7 +127,6 @@ export default function CreateBlogPage() {
       form.append("content", content);
       form.append("status", String(status));
       form.append("authorId", user.id);
-      
       form.append("categoryName", categoryInput.trim());
       if (featuredImage) form.append("featuredImage", featuredImage);
 
@@ -112,11 +142,19 @@ export default function CreateBlogPage() {
     }
   };
 
-  const filtered = categoryInput
-    ? categories.filter((c) =>
-        c.displayName.toLowerCase().includes(categoryInput.toLowerCase())
-      )
-    : categories;
+  const filtered = Array.isArray(categories)
+    ? categoryInput
+      ? categories.filter((c) =>
+          c.displayName.toLowerCase().includes(categoryInput.toLowerCase())
+        )
+      : categories
+    : [];
+
+
+  // Show a polished skeleton while the client is mounting
+  if (!mounted) {
+    return <SkeletonPage />;
+  }
 
   return (
     <div className="bg-gradient-to-b from-blue-500 to-gray-700 min-h-screen pb-12">
@@ -138,13 +176,14 @@ export default function CreateBlogPage() {
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700">Content</label>
                 <div className="mt-2">
+                  {/* Editor is client-only via dynamic import (ssr: false) */}
                   <Editor
                     apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                     value={content}
                     init={{
                       height: 520,
                       menubar: true,
-                      plugins: "link image code lists table paste",
+                      plugins: "link image code lists table",
                       toolbar:
                         "undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code",
                     }}
@@ -157,12 +196,7 @@ export default function CreateBlogPage() {
                 <div>Autosave enabled</div>
                 <div>
                   {typeof content === "string"
-                    ? `${
-                        content
-                          .replace(/<[^>]*>/g, "")
-                          .split(/\s+/)
-                          .filter(Boolean).length
-                      } words`
+                    ? `${content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length} words`
                     : ""}
                 </div>
               </div>
@@ -270,6 +304,8 @@ export default function CreateBlogPage() {
           </aside>
         </div>
       </form>
+
+      {loading && <FullscreenLoadingOverlay text="Creating..." />}
     </div>
   );
 }
