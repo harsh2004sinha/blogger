@@ -109,7 +109,13 @@ export class BlogService{
 
     async getBlog(slug: string){
         try{
-            return await prisma.blog.findUnique({where: { slug }});
+            return await prisma.blog.findUnique({
+                include: {
+                    category: true,
+                    author: true,
+                },
+                where: { slug },
+            });
         }
         catch (error){
             console.error("Prisma Serivce :: getBlog :: error");
@@ -125,7 +131,7 @@ export class BlogService{
                     author: true,
                 },
                 where: filters,
-                orderBy: {createdAt: "desc"},
+                orderBy: {updatedAt: "desc"},
                 take: 20,
             });
         } catch (error) {
