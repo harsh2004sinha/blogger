@@ -23,6 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: { slug: string
             featuredImage: post.featuredImage,
             imageId: post.imageId,
             category: post.category?.displayName ?? "",
+            author: post.author,
         };
 
         return SuccessResponse(payload, 200);

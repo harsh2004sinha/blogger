@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
 import dayjs from "dayjs";
-import { LoaderOne } from "./ui/Loader";
 
 type Blog = {
   id: string;
@@ -14,7 +13,7 @@ type Blog = {
   content: string;
   featuredImage?: string;
   category?: string;
-  author?: { id: string; name?: string; avatar?: string; email?: string };
+  author?: { id: string; username?: string; email?: string };
   publishedAt?: string;
   status?: boolean;
 };
@@ -40,6 +39,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
     (async () => {
       try {
         const res = await axios.get(`/api/blogs/${encodeURIComponent(slug)}`);
+        console.log(res);
         if (!isMounted) return;
         setBlog(res.data?.data ?? null);
       } catch (err: any) {
@@ -77,7 +77,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/dashboard/edit/${blog?.id || blog?.slug}`);
+    router.push(`/blogs/${blog?.slug}/edit`);
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -101,7 +101,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        <LoaderOne/>
+        
       </div>
     );
   }
@@ -191,14 +191,9 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
                 <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={blog.author?.avatar || `/avatar-placeholder.png`}
-                      alt={blog.author?.name || "Author"}
-                      className="h-10 w-10 rounded-full object-cover"
-                    />
                     <div>
                       <div className="font-medium text-gray-800 dark:text-white">
-                        {blog.author?.name ?? "Unknown author"}
+                        {blog.author?.username ?? "Unknown author"}
                       </div>
                       <div className="text-xs">{blog.author?.email ?? ""}</div>
                     </div>
@@ -219,27 +214,20 @@ export default function SingleBlogDisplay({ slug }: Props) {
                   <>
                     <button
                       onClick={handleEdit}
-                      className="px-3 py-1 rounded border text-sm"
+                      className="px-3 py-1 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
                     >
                       Edit
                     </button>
                     <button
                       onClick={handleDelete}
                       disabled={deleting}
-                      className="px-3 py-1 rounded border text-sm text-red-600"
+                      className="px-3 py-1 rounded border text-sm text-red-600 hover:cursor-pointer hover:bg-red-500 hover:text-white"
                     >
                       {deleting ? "Deleting..." : "Delete"}
                     </button>
                   </>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    {!isSignedIn ? (
-                      <SignInButton mode="modal">
-                        <button className="px-3 py-1 rounded bg-indigo-600 text-white text-sm">
-                          Sign in to edit
-                        </button>
-                      </SignInButton>
-                    ) : null}
                     <button
                       onClick={() =>
                         navigator.share
@@ -268,95 +256,11 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
         {/* Related posts + comments */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {/* Comments placeholder */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-              <h3 className="text-lg font-semibold mb-3">Comments</h3>
-              <p className="text-sm text-gray-500">
-                Comments integration placeholder (Disqus, Remark42, or your own
-                comments API).
-              </p>
-
-              {/* small comment form for signed-in users */}
-              {isSignedIn ? (
-                <form
-                  className="mt-4"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    alert("Comment posted (dummy)");
-                  }}
-                >
-                  <textarea
-                    placeholder="Write a comment..."
-                    className="w-full rounded border px-3 py-2 mb-2"
-                    rows={3}
-                  />
-                  <div className="flex gap-2">
-                    <button className="px-4 py-2 rounded bg-blue-600 text-white">
-                      Post comment
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => alert("Reply flow (dummy)")}
-                      className="px-4 py-2 rounded border"
-                    >
-                      Reply
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-500">
-                    Sign in to post a comment.
-                  </p>
-                  <div className="mt-2">
-                    <SignInButton mode="modal">
-                      <button className="px-4 py-2 rounded bg-indigo-600 text-white">
-                        Sign in
-                      </button>
-                    </SignInButton>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
 
           <aside className="space-y-6">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm">
-              <h4 className="text-sm font-semibold">Related posts</h4>
-              <ul className="mt-3 space-y-3 text-sm text-gray-700 dark:text-gray-200">
-                {/* Replace with actual related posts */}
-                <li className="flex items-center gap-3">
-                  <img
-                    src="/placeholder.jpg"
-                    alt="thumb"
-                    className="h-12 w-12 object-cover rounded"
-                  />
-                  <div>
-                    <div className="font-medium">Related post title</div>
-                    <div className="text-xs text-gray-500">
-                      Category • 2 min
-                    </div>
-                  </div>
-                </li>
-                <li className="flex items-center gap-3">
-                  <img
-                    src="/placeholder.jpg"
-                    alt="thumb"
-                    className="h-12 w-12 object-cover rounded"
-                  />
-                  <div>
-                    <div className="font-medium">Another post</div>
-                    <div className="text-xs text-gray-500">
-                      Category • 4 min
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
 
             <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm text-sm text-gray-600">
-              <h4 className="font-semibold text-gray-700 dark:text-gray-200">
+              <h4 className="font-semibold text-gray-700 dark:text-gray-200 ">
                 Quick actions
               </h4>
               <div className="mt-3 flex flex-col gap-2">
@@ -375,15 +279,9 @@ export default function SingleBlogDisplay({ slug }: Props) {
                       alert("Failed to copy link");
                     }
                   }}
-                  className="px-3 py-2 rounded border text-sm"
+                  className="px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
                 >
                   Copy link
-                </button>
-                <button
-                  onClick={() => alert("Bookmark (dummy)")}
-                  className="px-3 py-2 rounded border text-sm"
-                >
-                  Bookmark
                 </button>
               </div>
             </div>
