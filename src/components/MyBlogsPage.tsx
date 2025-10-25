@@ -77,6 +77,9 @@ const MyBlogsPage: React.FC = () => {
 
   // Render
   const visibleBlogs = blogs.slice(0, visibleCount);
+  const FALLBACK_IMG =
+    "https://thumbs.dreamstime.com/z/default-avatar-profile-flat-icon-social-media-user-vector-portrait-unknown-human-image-default-avatar-profile-flat-icon-184330869.jpg?ct=jpeg";
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-16 px-6">
@@ -148,9 +151,9 @@ const MyBlogsPage: React.FC = () => {
           </div>
         ) : blogs.length === 0 ? (
           // empty state
-          <div className="bg-white rounded-xl shadow p-8 text-center">
+          <div className="rounded-xl shadow p-8 text-center">
             <h2 className="text-xl font-semibold">No blogs available</h2>
-            <p className="mt-2 text-slate-200">There are no published posts right now. Check back later.</p>
+            <p className="mt-2 text-slate-900">There are no published posts right now. Check back later.</p>
           </div>
         ) : (
           // blog grid
@@ -163,7 +166,7 @@ const MyBlogsPage: React.FC = () => {
                   className="rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 hover:scale-105 transition-transform duration-300 relative"
                 >
                   <div className="relative">
-                    <img src={b.featuredImage || "/placeholder.jpg"} alt={b.title} className="h-56 w-full object-cover" />
+                    <img src={b.featuredImage || FALLBACK_IMG} alt={b.title} className="h-56 w-full object-cover" />
                     <div className="absolute bottom-3 right-3">
                       <span
                         className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
