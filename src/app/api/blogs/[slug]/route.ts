@@ -7,7 +7,7 @@ import { BlogSchema } from "@/lib/validation";
 
 export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
     try {
-        const { slug } = (await params) as { slug?: string };
+        const { slug } = params;
         if (!slug) return ErrorResponse("Slug is required", 400);
 
         const post = await service.getBlog(slug);
