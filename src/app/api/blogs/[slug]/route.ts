@@ -5,9 +5,13 @@ import { ErrorResponse } from "@/services/errorResponse";
 import { SuccessResponse } from "@/services/succesResponse";
 import { BlogSchema } from "@/lib/validation";
 
-export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: { slug: string } } | { params: Promise<{ slug: string }> }
+) {
     try {
-        const { slug } = params;
+        const params = await context.params;
+        const slug = (params as { slug: string }).slug;
         if (!slug) return ErrorResponse("Slug is required", 400);
 
         const post = await service.getBlog(slug);
@@ -34,12 +38,13 @@ export async function GET(req: NextRequest, { params }: { params: { slug: string
     }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function PUT(req: NextRequest, context: { params: { slug: string } } | { params: Promise<{ slug: string }> }) {
     try {
         const { userId } = await auth();
         if (!userId) return ErrorResponse("Unauthorized User", 401);
 
-        const { slug } = params;
+        const params = await context.params;
+        const slug = (params as { slug: string }).slug;
 
         const form = await req.formData();
         const rawTitle = form.get("title") as string | null;
@@ -106,17 +111,20 @@ export async function PUT(req: NextRequest, { params }: { params: { slug: string
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { slug: string } } | { params: Promise<{ slug: string }> }) {
     try {
+        const params = await context.params;
+        const slug = (params as { slug: string }).slug;
+
         const { userId } = await auth();
         if (!userId) return ErrorResponse("Unauthorized User", 401);
 
-        const existingBlog = await service.getBlog(params.slug);
+        const existingBlog = await service.getBlog(slug);
 
         if (!existingBlog) return ErrorResponse("Post Not Found", 404);
         if (existingBlog.authorId !== userId) return ErrorResponse("Forbidden", 403);
 
-        const deleted = await service.deleteBlog(params.slug);
+        const deleted = await service.deleteBlog(slug);
         return SuccessResponse(deleted, 200, "Post Deleted Successfully");
 
     } catch (error) {

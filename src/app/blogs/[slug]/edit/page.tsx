@@ -1,10 +1,10 @@
 import EditBlogPage from '@/components/EditPage'
 import React from 'react'
 
-function Page({ params }: { params: { slug: string } }) {
+function Page() {
   return (
     <div>
-        <EditBlogPage params={params}/>
+        <EditBlogPage/>
     </div>
   )
 }
