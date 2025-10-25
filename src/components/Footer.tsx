@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
-            <a href="https://flowbite.com/" className="flex items-center">
+            <a href="/" className="flex items-center">
               <img
                 src="https://flowbite.com/docs/images/logo.svg"
                 className="h-8 me-3"
@@ -25,22 +25,22 @@ const Footer: React.FC = () => {
               </h2>
               <ul className="text-gray-300 dark:text-gray-600 font-medium">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/" className="hover:underline hover:text-gray-400">
                     BlogVerse
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/contact-us" className="hover:underline hover:text-gray-400">
                     About
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/blogs/create" className="hover:underline hover:text-gray-400">
                     Write a Blog
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/blogs" className="hover:underline hover:text-gray-400">
                     Explore
                   </a>
                 </li>
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
               <ul className="text-gray-300 dark:text-gray-600 font-medium">
                 <li className="mb-4">
                   <a
-                    href="#"
+                    href="/"
                     className="hover:underline hover:text-gray-400"
                   >
                     Github
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="#"
+                    href="/"
                     className="hover:underline hover:text-gray-400"
                   >
                     LinkedIn
@@ -70,7 +70,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="#"
+                    href="/"
                     className="hover:underline hover:text-gray-400"
                   >
                     Facebook
@@ -85,12 +85,12 @@ const Footer: React.FC = () => {
               </h2>
               <ul className="text-gray-300 dark:text-gray-600 font-medium">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/" className="hover:underline hover:text-gray-400">
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:underline hover:text-gray-400">
+                  <a href="/" className="hover:underline hover:text-gray-400">
                     Terms &amp; Conditions
                   </a>
                 </li>
@@ -104,7 +104,7 @@ const Footer: React.FC = () => {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-gray-200 sm:text-center dark:text-gray-400">
             © 2023{" "}
-            <a href="#" className="hover:underline">
+            <a href="/" className="hover:underline">
               BlogVerse™
             </a>
             . All Rights Reserved.
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
           <div className="flex mt-4 sm:justify-center sm:mt-0">
             {/* Facebook */}
             <a
-              href="#"
+              href="/"
               className="text-gray-200 hover:text-gray-400 dark:hover:text-black"
             >
               <svg
@@ -134,7 +134,7 @@ const Footer: React.FC = () => {
 
             {/* Discord */}
             <a
-              href="#"
+              href="/"
               className="text-gray-200 hover:text-gray-400 dark:hover:text-black ms-5"
             >
               <svg
@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
 
             {/* Twitter */}
             <a
-              href="#"
+              href="/"
               className="text-gray-200 hover:text-gray-400 dark:hover:text-black ms-5"
             >
               <svg
@@ -172,7 +172,7 @@ const Footer: React.FC = () => {
 
             {/* GitHub */}
             <a
-              href="#"
+              href="/"
               className="text-gray-200 hover:text-gray-400 dark:hover:text-black ms-5"
             >
               <svg

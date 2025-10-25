@@ -128,7 +128,7 @@ export const FloatingNav = ({
         )}
       >
         <div>
-          <a href="#" className="flex items-center">
+          <a href="/" className="flex items-center">
             <img
               src="https://flowbite.com/docs/images/logo.svg"
               className="h-8 m-3"
