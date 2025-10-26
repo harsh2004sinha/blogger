@@ -52,6 +52,7 @@ blogverse/
 - Node.js >= 18
 - PostgreSQL database
 - Cloudinary account
+- TinyMCE account
 
 ### Installation
 
@@ -65,15 +66,18 @@ npm install
 
 Create a .env file:
 
+```bash
 DATABASE_URL="postgresql://user:password@localhost:5432/blogify"
 CLOUDINARY_CLOUD_NAME="your_cloud_name"
 CLOUDINARY_API_KEY="your_api_key"
 CLOUDINARY_API_SECRET="your_api_secret"
+```
 
 ### Run Locally
 
+```bash
 npm run dev
-
+```
 
 ### Live Demo
 
