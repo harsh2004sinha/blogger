@@ -42,11 +42,9 @@ export function HeroSection() {
 
             <SignedOut>
               <SignInButton>
-              <button
-                className="bg-black dark:bg-white text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                Start Writing
-              </button>
+                <button className="bg-black dark:bg-white text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                  Start Writing
+                </button>
               </SignInButton>
             </SignedOut>
 
@@ -59,7 +57,11 @@ export function HeroSection() {
           </div>
         </motion.div>
       </AuroraBackground>
-      <div className="relative flex flex-col gap-4 items-center justify-center px-4 bg-gradient-to-b from-zinc-200 to-gray-700">
+      <div
+        className="relative flex flex-col gap-4 items-center justify-center px-4
+                bg-gradient-to-b from-zinc-200 to-gray-700
+                dark:from-zinc-900 dark:to-gray-700"
+      >
         <motion.div
           initial={{ opacity: 0.0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}

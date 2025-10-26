@@ -144,7 +144,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
   }
 
   return (
-    <article className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 py-8 px-4 sm:px-6 lg:px-8">
+    <article className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-700 dark:text-gray-300 mb-4 mt-16">
@@ -311,7 +311,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
                       alert("Failed to copy link");
                     }
                   }}
-                  className="w-full px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+                  className="w-full px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white dark:text-gray-300"
                   aria-label="Copy link"
                 >
                   Copy link
@@ -320,13 +320,13 @@ export default function SingleBlogDisplay({ slug }: Props) {
                 {/* Sign in/out CTA if visitor */}
                 {!isSignedIn ? (
                   <SignInButton mode="modal">
-                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white">
+                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white dark:text-gray-300">
                       Sign in to comment
                     </button>
                   </SignInButton>
                 ) : (
                   <SignOutButton>
-                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white">
+                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white dark:text-gray-300">
                       Sign out
                     </button>
                   </SignOutButton>
@@ -340,8 +340,8 @@ export default function SingleBlogDisplay({ slug }: Props) {
                 About the author
               </h4>
               <div className="mt-2">
-                <div className="font-medium">{blog.author?.username ?? "Unknown"}</div>
-                <div className="text-xs text-gray-500">{blog.author?.email ?? ""}</div>
+                <div className="font-medium text-gray-500 dark:text-gray-300">{blog.author?.username ?? "Unknown"}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-300">{blog.author?.email ?? ""}</div>
               </div>
             </div>
           </aside>

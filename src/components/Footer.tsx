@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
                 className="h-8 me-3"
                 alt="BlogVerse Logo"
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-black">
+              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                 BlogVerse
               </span>
             </a>
@@ -20,10 +20,10 @@ const Footer: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-black">
+              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
                 Resources
               </h2>
-              <ul className="text-gray-300 dark:text-gray-600 font-medium">
+              <ul className="text-gray-300 dark:text-gray-300 font-medium">
                 <li className="mb-4">
                   <a href="/" className="hover:underline hover:text-gray-400">
                     BlogVerse
@@ -48,10 +48,10 @@ const Footer: React.FC = () => {
             </div>
 
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-black">
+              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
                 Follow us
               </h2>
-              <ul className="text-gray-300 dark:text-gray-600 font-medium">
+              <ul className="text-gray-300 dark:text-gray-300 font-medium">
                 <li className="mb-4">
                   <a
                     href="/"
@@ -80,10 +80,10 @@ const Footer: React.FC = () => {
             </div>
 
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-black">
+              <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
                 Legal
               </h2>
-              <ul className="text-gray-300 dark:text-gray-600 font-medium">
+              <ul className="text-gray-300 dark:text-gray-300 font-medium">
                 <li className="mb-4">
                   <a href="/" className="hover:underline hover:text-gray-400">
                     Privacy Policy

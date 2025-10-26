@@ -263,7 +263,7 @@ export default function EditBlogPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter blog title"
-                className="mt-2 w-full rounded-lg border px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="mt-2 w-full rounded-lg border px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:text-black"
               />
 
               <div className="mt-6">
@@ -306,7 +306,7 @@ export default function EditBlogPage() {
           <aside className="lg:col-span-1">
             <div className="sticky top-6 space-y-6">
               {/* Image card */}
-              <div className="bg-white border shadow-sm rounded-2xl p-4">
+              <div className="bg-white border shadow-sm rounded-2xl p-4 dark:text-black">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">Image</h3>
                   <span className="text-xs text-gray-400">Optional</span>
@@ -385,7 +385,7 @@ export default function EditBlogPage() {
               </div>
 
               {/* Category & Status */}
-              <div className="bg-white border shadow-sm rounded-2xl p-4 relative">
+              <div className="bg-white border shadow-sm rounded-2xl p-4 relative dark:text-black">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">Category</h3>
                 </div>

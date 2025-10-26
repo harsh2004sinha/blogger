@@ -92,20 +92,46 @@ export default function BlogsPage() {
               Select category
             </label>
 
-            {/* Dropdown visible on all screens. Full width on small screens, fixed width on sm+ */}
-            <select
-              id="category"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full sm:w-56 px-3 py-2 border rounded-md bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              aria-label="Select blog category"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            <div className="relative w-full sm:w-56">
+              {/* Select */}
+              <select
+                id="category"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="block w-full appearance-none px-3 py-2 pr-10 border rounded-md bg-white text-sm text-slate-800 shadow-sm
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                 border-slate-200 dark:text-slate-800 dark:border-neutral-700 dark:shadow-none transition-colors duration-150"
+                aria-label="Select blog category"
+              >
+                {categories.map((cat) => (
+                  <option
+                    key={cat}
+                    value={cat}
+                    className="bg-white text-slate-800 dark:bg-neutral-800 dark:text-slate-100"
+                  >
+                    {cat}
+                  </option>
+                ))}
+              </select>
+
+              {/* Chevron (pointer-events-none so it doesn't block clicks) */}
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <svg
+                  className="w-4 h-4 text-slate-400 dark:text-slate-800"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 8l4 4 4-4"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </header>
 
