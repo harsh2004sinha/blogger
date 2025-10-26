@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 BlogVerse - Modern Full-Stack Blogging Application
 
-## Getting Started
+![BlogVerse Banner](https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGJsb2d8ZW58MHx8MHx8&ixlib=rb-4.0.3&q=80&w=1080)
 
-First, run the development server:
+## Overview
+
+**BlogVerse** is a modern full-stack blogging platform that allows users to **create, edit, publish, and explore blogs**. The application features a **responsive user interface**, **secure backend**, **category-based filtering**, and **progressive blog loading** to provide a seamless reading and writing experience.
+
+- Users can browse blogs in a **3x3 grid layout**, with a **"Browse More"** option to load additional blogs.
+- Blogs can include **rich-text content** and **images** uploaded via Cloudinary.
+- Dynamic filtering by **categories** like Travel, Tech, Food, and Lifestyle enhances discoverability.
+
+---
+
+## 🚀 Features
+
+- **Rich Blog Management:** Create, edit, and publish blogs with TinyMCE editor and image uploads.
+- **Responsive Grid & Pagination:** 3x3 blog grid with "Browse More" functionality for seamless content exploration.
+- **Dynamic Category Filtering:** Filter blogs easily by categories like Tech, Travel, Food, and Lifestyle.
+- **Cloud Storage & Secure Backend:** Cloudinary for media storage and Prisma ORM with PostgreSQL for efficient data handling.
+
+---
+
+## 🛠 Technologies Used
+
+- **Frontend:** Next.js, React, Tailwind CSS, TypeScript  
+- **Backend:** Next.js API Routes, Prisma ORM, PostgreSQL  
+- **Media Handling:** Cloudinary  
+- **Deployment:** Vercel
+
+---
+
+## 📂 Project Structure
+blogverse/
+├─ components/ # Reusable React components
+├─ pages/ # Next.js pages & API routes
+├─ prisma/ # Prisma schema & migrations
+├─ public/ # Static assets
+├─ api/ # Backend implementation
+├─ services/ # Backend services
+├─ styles/ # Tailwind & custom CSS
+├─ utils/ # Utility functions
+└─ README.md
+
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- PostgreSQL database
+- Cloudinary account
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/harsh2004sinha/blogger.git
+cd blogger
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Setup Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a .env file:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+DATABASE_URL="postgresql://user:password@localhost:5432/blogify"
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
 
-## Learn More
+### Run Locally
 
-To learn more about Next.js, take a look at the following resources:
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Live Demo
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+https://blogger-ivory-eta.vercel.app/
