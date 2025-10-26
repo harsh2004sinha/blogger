@@ -30,26 +30,28 @@ export function HeroSection() {
             Write, Publish and Inspire. Join our community of creators and
             readers passionate about tech, design and innovation.
           </div>
-          <div className="flex gap-32 align-middle">
+          <div className="flex flex-wrap justify-center md:justify-start items-center gap-6 md:gap-16 lg:gap-32 mt-4 md:mt-0">
             <SignedIn>
               <button
                 onClick={() => router.push("/blogs/create")}
-                className="bg-black dark:bg-white hover:cursor-pointer rounded-full w-fit text-white dark:text-black px-4 py-2 transition hover:scale-105"
+                className="bg-black dark:bg-white text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
               >
                 Start Writing
               </button>
             </SignedIn>
+
             <SignedOut>
               <button
                 onClick={() => router.push("/sign-in")}
-                className="bg-black dark:bg-white rounded-full w-fit hover:cursor-pointer text-white dark:text-black px-4 py-2 transition hover:scale-105"
+                className="bg-black dark:bg-white text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
               >
                 Start Writing
               </button>
             </SignedOut>
+
             <button
               onClick={() => router.push("/blogs")}
-              className="bg-black dark:bg-white rounded-full w-fit hover:cursor-pointer text-white dark:text-black px-4 py-2 transition hover:scale-105"
+              className="bg-gradient-to-r from-black to-gray-800 dark:from-white dark:to-gray-300 text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               Explore Blogs
             </button>

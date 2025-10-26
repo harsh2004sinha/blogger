@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
 
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-gray-200 sm:text-center dark:text-gray-400">
-            © 2023{" "}
+            © 2025{" "}
             <a href="/" className="hover:underline">
               BlogVerse™
             </a>
