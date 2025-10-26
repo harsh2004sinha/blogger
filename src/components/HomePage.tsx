@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import React from "react";
 import { AuroraBackground } from "./ui/AuroraBackground";
 import { useRouter } from "next/navigation";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { CarouselCards } from "./ui/CarouselCards";
 
 export function HeroSection() {
@@ -41,12 +41,13 @@ export function HeroSection() {
             </SignedIn>
 
             <SignedOut>
+              <SignInButton>
               <button
-                onClick={() => router.push("/sign-in")}
                 className="bg-black dark:bg-white text-white dark:text-black font-medium rounded-full px-6 py-2 md:px-8 md:py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
               >
                 Start Writing
               </button>
+              </SignInButton>
             </SignedOut>
 
             <button

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import SkeletonPage from "./ui/SkeletonUI";
+import { useClerk } from "@clerk/nextjs";
 
 // Dynamically load Editor and disable SSR to avoid hydration issues
 const Editor = dynamic(
@@ -23,9 +24,26 @@ function FullscreenLoadingOverlay({ text = "Loading..." }: { text?: string }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="inline-flex items-center gap-3 rounded-lg bg-white/95 px-5 py-4 shadow-lg">
-        <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="4" />
-          <path d="M22 12a10 10 0 00-10-10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+        <svg
+          className="animate-spin h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          aria-hidden
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeOpacity="0.2"
+            strokeWidth="4"
+          />
+          <path
+            d="M22 12a10 10 0 00-10-10"
+            stroke="currentColor"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
         </svg>
         <div className="text-sm font-medium">{text}</div>
       </div>
@@ -36,6 +54,7 @@ function FullscreenLoadingOverlay({ text = "Loading..." }: { text?: string }) {
 export default function CreateBlogPage() {
   const { isSignedIn, user } = useUser();
   const router = useRouter();
+  const { openSignIn } = useClerk();
 
   // mounted prevents rendering until client mount -> avoids SSR/CSR mismatch
   const [mounted, setMounted] = useState(false);
@@ -59,7 +78,7 @@ export default function CreateBlogPage() {
   useEffect(() => {
     if (!mounted) return;
     if (isSignedIn === false) {
-      router.push("/sign-in");
+      openSignIn();
     }
   }, [mounted, isSignedIn, router]);
 
@@ -150,7 +169,6 @@ export default function CreateBlogPage() {
       : categories
     : [];
 
-
   // Show a polished skeleton while the client is mounting
   if (!mounted) {
     return <SkeletonPage />;
@@ -158,12 +176,18 @@ export default function CreateBlogPage() {
 
   return (
     <div className="bg-gradient-to-b from-blue-500 to-gray-700 min-h-screen pb-12">
-      <form onSubmit={handleSubmit} className="mx-auto pt-36 max-w-6xl px-6" aria-label="Create blog form">
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto pt-36 max-w-6xl px-6"
+        aria-label="Create blog form"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* LEFT (editor) */}
           <div className="lg:col-span-2">
             <div className="bg-white border shadow-sm rounded-2xl p-6">
-              <label className="block text-sm font-medium text-gray-700">Title</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
               <input
                 id="title"
                 type="text"
@@ -174,7 +198,9 @@ export default function CreateBlogPage() {
               />
 
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700">Content</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Content
+                </label>
                 <div className="mt-2">
                   {/* Editor is client-only via dynamic import (ssr: false) */}
                   <Editor
@@ -196,7 +222,12 @@ export default function CreateBlogPage() {
                 <div>Autosave enabled</div>
                 <div>
                   {typeof content === "string"
-                    ? `${content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length} words`
+                    ? `${
+                        content
+                          .replace(/<[^>]*>/g, "")
+                          .split(/\s+/)
+                          .filter(Boolean).length
+                      } words`
                     : ""}
                 </div>
               </div>
@@ -216,13 +247,18 @@ export default function CreateBlogPage() {
                 <div className="mt-4">
                   {previewUrl ? (
                     <div className="relative rounded-md overflow-hidden border">
-                      <img src={previewUrl} alt="featured preview" className="w-full h-40 object-cover" />
+                      <img
+                        src={previewUrl}
+                        alt="featured preview"
+                        className="w-full h-40 object-cover"
+                      />
                       <button
                         type="button"
                         onClick={() => {
                           setFeaturedImage(null);
                           setPreviewUrl(null);
-                          if (fileInputRef.current) fileInputRef.current.value = "";
+                          if (fileInputRef.current)
+                            fileInputRef.current.value = "";
                         }}
                         className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
                         aria-label="Remove image"
@@ -234,19 +270,40 @@ export default function CreateBlogPage() {
                     <div className="flex h-40 w-full items-center justify-center rounded-md border-2 border-dashed bg-gray-50">
                       <div className="text-center text-sm text-gray-500">
                         <div>Upload an image</div>
-                        <div className="text-xs text-gray-400 mt-1">PNG, JPG — recommended 1200×600</div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          PNG, JPG — recommended 1200×600
+                        </div>
                       </div>
                     </div>
                   )}
 
-                  <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} accept="image/*" />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
 
                   <div className="mt-4 flex gap-2">
-                    <button type="button" onClick={handleUploadClick} className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium">
+                    <button
+                      type="button"
+                      onClick={handleUploadClick}
+                      className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium"
+                    >
                       {featuredImage ? "Change Image" : "Upload Image"}
                     </button>
                     {featuredImage && (
-                      <button type="button" onClick={() => { setFeaturedImage(null); setPreviewUrl(null); if (fileInputRef.current) fileInputRef.current.value = ""; }} className="inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFeaturedImage(null);
+                          setPreviewUrl(null);
+                          if (fileInputRef.current)
+                            fileInputRef.current.value = "";
+                        }}
+                        className="inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm"
+                      >
                         Remove
                       </button>
                     )}
@@ -263,9 +320,14 @@ export default function CreateBlogPage() {
                 <div className="mt-3">
                   <input
                     value={categoryInput}
-                    onChange={(e) => { setCategoryInput(e.target.value); setShowSuggestions(true); }}
+                    onChange={(e) => {
+                      setCategoryInput(e.target.value);
+                      setShowSuggestions(true);
+                    }}
                     onFocus={() => setShowSuggestions(true)}
-                    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                    onBlur={() =>
+                      setTimeout(() => setShowSuggestions(false), 150)
+                    }
                     placeholder="Type a category (e.g. Web Dev)"
                     className="w-full rounded-md border px-3 py-2 text-sm"
                   />
@@ -273,7 +335,13 @@ export default function CreateBlogPage() {
                   {showSuggestions && filtered.length > 0 && (
                     <ul className="absolute z-20 mt-14 w-full max-h-40 overflow-auto bg-white border rounded-md shadow-sm text-sm">
                       {filtered.map((c) => (
-                        <li key={c.id} className="px-3 py-2 hover:bg-gray-100 cursor-pointer" onMouseDown={() => handleSuggestionClick(c.displayName)}>
+                        <li
+                          key={c.id}
+                          className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                          onMouseDown={() =>
+                            handleSuggestionClick(c.displayName)
+                          }
+                        >
                           {c.displayName}
                         </li>
                       ))}
@@ -282,18 +350,31 @@ export default function CreateBlogPage() {
 
                   <div className="mt-4">
                     <div className="flex items-center gap-3">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${status ? "bg-green-50 text-green-700" : "bg-red-100 text-red-700"}`}>
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                          status
+                            ? "bg-green-50 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
                         {status ? "Active" : "Inactive"}
                       </div>
 
-                      <select value={status ? "true" : "false"} onChange={(e) => setStatus(e.target.value === "true")} className="ml-auto rounded-md border px-3 py-2 text-sm">
+                      <select
+                        value={status ? "true" : "false"}
+                        onChange={(e) => setStatus(e.target.value === "true")}
+                        className="ml-auto rounded-md border px-3 py-2 text-sm"
+                      >
                         <option value="true">Active</option>
                         <option value="false">Inactive</option>
                       </select>
                     </div>
 
                     <div className="mt-4">
-                      <button type="submit" className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
+                      <button
+                        type="submit"
+                        className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+                      >
                         {loading ? "Creating..." : "Create Blog"}
                       </button>
                     </div>
