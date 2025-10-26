@@ -28,10 +28,9 @@ export function CarouselCards() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("api/blogs");
+        const res = await axios.get("/api/blogs");
         const allBlogs: Blog[] = res.data?.data || res.data || [];
 
-        // Filter published blogs, sort by updatedAt descending, and keep only 4 most recent
         const filteredSorted: Blog[] = (allBlogs as Blog[])
           .filter((b) => b.status === true)
           .sort(
@@ -51,10 +50,12 @@ export function CarouselCards() {
     fetchBlogs();
   }, []);
 
+  // guard for empty
+  const slideCount = Math.max(blogs.length, 1);
   const prev = () =>
-    setCurrentIndex((prev) => (prev === 0 ? blogs.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? slideCount - 1 : prev - 1));
   const next = () =>
-    setCurrentIndex((prev) => (prev === blogs.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === slideCount - 1 ? 0 : prev + 1));
 
   const goToBlog = (title: string) => {
     const slug = slugify(title, { lower: true, strict: true });
@@ -65,12 +66,17 @@ export function CarouselCards() {
     router.push("/blogs");
   };
 
+  // width for track and per-slide percent
+  const trackWidth = `${slideCount * 100}%`;
+  const slidePercent = 100 / slideCount;
+  const translatePercent = -(currentIndex * slidePercent);
+
   return (
     <div className="relative w-full max-w-6xl mx-auto">
       {/* ====== LOADING SKELETON ====== */}
       {loading ? (
         <div className="overflow-hidden rounded-3xl shadow-lg relative">
-          <div className="w-full h-[450px] bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse" />
+          <div className="w-full h-[300px] md:h-[450px] bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 animate-pulse" />
           <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-6 space-y-3">
             <div className="h-6 w-1/2 bg-gray-400/60 rounded animate-pulse"></div>
             <div className="h-4 w-1/3 bg-gray-400/50 rounded animate-pulse"></div>
@@ -81,37 +87,39 @@ export function CarouselCards() {
           {/* ====== CAROUSEL ====== */}
           <div className="overflow-hidden rounded-3xl shadow-lg relative">
             <motion.div
-              className="flex transition-transform duration-700 ease-in-out"
+              className="flex"
               style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
+                width: trackWidth,
+                transform: `translateX(${translatePercent}%)`,
               }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
             >
               {blogs.length > 0 ? (
                 blogs.map((blog, i) => (
                   <div
                     key={blog.id ?? i}
-                    className="min-w-full flex-shrink-0 relative cursor-pointer"
+                    // each slide gets an explicit percent width so translate math works reliably
+                    style={{ width: `${slidePercent}%`, flex: `0 0 ${slidePercent}%` }}
+                    className="relative cursor-pointer"
                     onClick={() => goToBlog(blog.title)}
                   >
                     <img
                       src={blog.featuredImage ?? undefined}
                       alt={blog.title}
-                      className="w-full h-[450px] object-cover brightness-90 hover:brightness-100 transition-all duration-300"
+                      // responsive heights: shorter on small screens, taller on md+
+                      className="w-full h-[220px] sm:h-[300px] md:h-[450px] object-cover brightness-90 hover:brightness-100 transition-all duration-300 rounded-3xl"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white px-6 py-4">
-                      <div className="text-2xl font-semibold">{blog.title}</div>
-                      <div className="text-sm opacity-80">
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white px-6 py-4 rounded-b-3xl">
+                      <div className="text-lg sm:text-2xl font-semibold">{blog.title}</div>
+                      <div className="text-xs sm:text-sm opacity-80">
                         {blog.category?.displayName ?? "Unknown"}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                // Empty state when there are no blogs to show
-                <div className="min-w-full flex-shrink-0 relative bg-gray-100 h-[450px] flex items-center justify-center">
-                  <div className="text-center text-gray-600">
-                    No recent blogs to display.
-                  </div>
+                <div style={{ width: "100%" }} className="relative bg-gray-100 h-[300px] md:h-[450px] flex items-center justify-center rounded-3xl">
+                  <div className="text-center text-gray-600">No recent blogs to display.</div>
                 </div>
               )}
             </motion.div>
@@ -123,6 +131,7 @@ export function CarouselCards() {
               <button
                 onClick={prev}
                 className="absolute top-1/2 left-4 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:scale-110 transition"
+                aria-label="Previous"
               >
                 <ChevronLeft className="w-6 h-6 text-black dark:text-white" />
               </button>
@@ -130,6 +139,7 @@ export function CarouselCards() {
               <button
                 onClick={next}
                 className="absolute top-1/2 right-4 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-md hover:scale-110 transition"
+                aria-label="Next"
               >
                 <ChevronRight className="w-6 h-6 text-black dark:text-white" />
               </button>
@@ -143,14 +153,11 @@ export function CarouselCards() {
                 key={i}
                 onClick={() => setCurrentIndex(i)}
                 className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
-                  currentIndex === i
-                    ? "bg-black dark:bg-white scale-125"
-                    : "bg-gray-400"
+                  currentIndex === i ? "bg-black dark:bg-white scale-125" : "bg-gray-400"
                 }`}
               ></div>
             ))}
           </div>
-
         </>
       )}
     </div>

@@ -68,7 +68,7 @@ export function HeroSection() {
             ease: "easeInOut",
           }}
         >
-          <div className="text-3xl md:text-7xl font-bold dark:text-white text-left ml-6">
+          <div className="text-3xl md:text-4xl font-bold dark:text-white text-left ml-6 mt-12">
             <div className="mb-10"> Recent Blogs: </div>
             <CarouselCards />
 

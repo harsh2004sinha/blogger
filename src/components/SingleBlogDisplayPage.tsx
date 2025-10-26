@@ -39,7 +39,6 @@ export default function SingleBlogDisplay({ slug }: Props) {
     (async () => {
       try {
         const res = await axios.get(`/api/blogs/${encodeURIComponent(slug)}`);
-        console.log(res);
         if (!isMounted) return;
         setBlog(res.data?.data ?? null);
       } catch (err: any) {
@@ -59,7 +58,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
   const readingTime = useMemo(() => {
     if (!blog?.content) return null;
-    
+
     const text = blog.content.replace(/<[^>]*>/g, " ");
     const words = text.trim().split(/\s+/).filter(Boolean).length;
     const minutes = Math.max(1, Math.round(words / 200));
@@ -68,7 +67,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
   const isOwner = useMemo(() => {
     if (!isLoaded || !isSignedIn || !user || !blog?.author) return false;
-    
+
     return (
       user.id === blog.author.id ||
       user.primaryEmailAddress?.emailAddress === blog.author.email
@@ -100,8 +99,12 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-        
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 p-6">
+        <div className="w-full max-w-4xl animate-pulse">
+          <div className="h-56 sm:h-72 md:h-96 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4" />
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+        </div>
       </div>
     );
   }
@@ -114,7 +117,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
           <p className="text-gray-200 mb-6">
             {error ?? "The requested blog could not be loaded."}
           </p>
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
             <button
               onClick={() => router.push("/blogs")}
               className="px-4 py-2 rounded bg-blue-600 text-white hover:cursor-pointer hover:bg-blue-400"
@@ -123,11 +126,15 @@ export default function SingleBlogDisplay({ slug }: Props) {
             </button>
             {!isSignedIn ? (
               <SignInButton mode="modal">
-                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">Sign in</button>
+                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">
+                  Sign in
+                </button>
               </SignInButton>
             ) : (
               <SignOutButton>
-                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">Sign out</button>
+                <button className="px-4 py-2 rounded border text-white hover:cursor-pointer hover:bg-blue-400">
+                  Sign out
+                </button>
               </SignOutButton>
             )}
           </div>
@@ -137,130 +144,153 @@ export default function SingleBlogDisplay({ slug }: Props) {
   }
 
   return (
-    <article className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-12 px-6">
-      <div className="max-w-4xl mx-auto">
+    <article className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
-        <div className="text-sm text-gray-900 mb-4">
-          <button onClick={() => router.push("/blogs")} className="underline">
+        <div className="text-sm text-gray-700 dark:text-gray-300 mb-4 mt-16">
+          <button
+            onClick={() => router.push("/blogs")}
+            className="underline text-sm"
+            aria-label="Go back to blogs"
+          >
             Blogs
           </button>
           <span className="mx-2">/</span>
-          <span>{blog.title}</span>
+          <span className="truncate max-w-xs inline-block align-middle">{blog.title}</span>
         </div>
 
-        {/* Hero */}
-        <header className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm">
-          {blog.featuredImage ? (
-            <div className="relative">
-              <img
-                src={blog.featuredImage}
-                alt={blog.title}
-                className="w-full h-72 object-cover"
-              />
-              {/* Status pill, bottom-right */}
-              <div className="absolute bottom-4 right-4">
-                <span
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
-                    blog.status === true
-                      ? "bg-green-100 text-green-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  <span
-                    className={`h-2 w-2 rounded-full ${
-                      blog.status === true
-                        ? "bg-green-600"
-                        : "bg-yellow-600"
-                    }`}
+        {/* Grid: content + aside */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main column (span 2 on large screens) */}
+          <main className="lg:col-span-2 space-y-6">
+            {/* Hero */}
+            <header className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm">
+              {blog.featuredImage ? (
+                <div className="relative">
+                  <img
+                    src={blog.featuredImage}
+                    alt={blog.title}
+                    className="w-full h-[200px] sm:h-[300px] md:h-[420px] lg:h-[520px] object-cover"
                   />
-                  {blog.status ?? true}
-                </span>
-              </div>
-            </div>
-          ) : null}
+                  {/* Status pill, bottom-right */}
+                  <div className="absolute bottom-4 right-4">
+                    <span
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
+                        blog.status === true
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          blog.status === true ? "bg-green-600" : "bg-yellow-600"
+                        }`}
+                      />
+                    </span>
+                  </div>
+                </div>
+              ) : null}
 
-          <div className="p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm text-blue-600 font-medium">
-                  {blog.category ?? "Uncategorized"}
-                </p>
-                <h1 className="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                  {blog.title}
-                </h1>
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div className="flex-1">
+                    <p className="text-sm text-blue-600 font-medium">
+                      {blog.category ?? "Uncategorized"}
+                    </p>
+                    <h1 className="mt-2 text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                      {blog.title}
+                    </h1>
 
-                <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="font-medium text-gray-800 dark:text-white">
-                        {blog.author?.username ?? "Unknown author"}
+                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <div className="font-medium text-gray-800 dark:text-white">
+                            {blog.author?.username ?? "Unknown author"}
+                          </div>
+                          <div className="text-xs">{blog.author?.email ?? ""}</div>
+                        </div>
                       </div>
-                      <div className="text-xs">{blog.author?.email ?? ""}</div>
+
+                      <div className="mt-2 sm:mt-0">
+                        {blog.publishedAt
+                          ? dayjs(blog.publishedAt).format("MMM D, YYYY")
+                          : "—"}
+                      </div>
+
+                      {readingTime && <div className="mt-1 sm:mt-0">• {readingTime}</div>}
                     </div>
                   </div>
 
-                  <div>
-                    {blog.publishedAt
-                      ? dayjs(blog.publishedAt).format("MMM D, YYYY")
-                      : "—"}
+                  {/* Owner controls */}
+                  <div className="flex-shrink-0 flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    {isSignedIn && isOwner ? (
+                      <>
+                        <button
+                          onClick={handleEdit}
+                          className="w-full sm:w-auto px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+                          aria-label="Edit post"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={handleDelete}
+                          disabled={deleting}
+                          className="w-full sm:w-auto px-3 py-2 rounded border text-sm text-red-600 hover:cursor-pointer hover:bg-red-500 hover:text-white"
+                          aria-label="Delete post"
+                        >
+                          {deleting ? "Deleting..." : "Delete"}
+                        </button>
+                      </>
+                    ) : (
+                      <div className="flex w-full sm:w-auto">
+                        <button
+                          onClick={() =>
+                            navigator.share
+                              ? navigator.share({
+                                  title: blog.title,
+                                  url: typeof window !== "undefined" ? window.location.href : "",
+                                })
+                              : navigator.clipboard
+                              ? (async () => {
+                                  try {
+                                    await navigator.clipboard.writeText(
+                                      typeof window !== "undefined" ? window.location.href : ""
+                                    );
+                                    alert("Link copied!");
+                                  } catch {
+                                    alert("Use native share or copy URL");
+                                  }
+                                })()
+                              : alert("Use native share or copy URL")
+                          }
+                          className="w-full px-3 py-2 rounded border text-sm"
+                          aria-label="Share post"
+                        >
+                          Share
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {readingTime && <div>• {readingTime}</div>}
                 </div>
               </div>
+            </header>
 
-              {/* Owner controls */}
-              <div className="ml-auto flex items-start gap-2">
-                {isSignedIn && isOwner ? (
-                  <>
-                    <button
-                      onClick={handleEdit}
-                      className="px-3 py-1 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      disabled={deleting}
-                      className="px-3 py-1 rounded border text-sm text-red-600 hover:cursor-pointer hover:bg-red-500 hover:text-white"
-                    >
-                      {deleting ? "Deleting..." : "Delete"}
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() =>
-                        navigator.share
-                          ? navigator.share({
-                              title: blog.title,
-                              url: window.location.href,
-                            })
-                          : alert("Use native share or copy URL")
-                      }
-                      className="px-3 py-1 rounded border text-sm"
-                    >
-                      Share
-                    </button>
-                  </div>
-                )}
-              </div>
+            {/* Content */}
+            <div className="prose prose-lg dark:prose-invert max-w-none mt-2 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-sm">
+              {/* Danger: ensure server-side sanitization of HTML before sending */}
+              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
             </div>
-          </div>
-        </header>
 
-        {/* Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none mt-8 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-          {/* Danger: ensure server-side sanitization of HTML before sending */}
-          <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-        </div>
+            {/* Placeholder for Related posts or Comments */}
+            <section className="mt-6">
+              {/* You can render related posts or comments here */}
+            </section>
+          </main>
 
-        {/* Related posts + comments */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-
+          {/* Aside / Quick actions (moves below content on small screens) */}
           <aside className="space-y-6">
-
             <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm text-sm text-gray-600">
-              <h4 className="font-semibold text-gray-700 dark:text-gray-200 ">
+              <h4 className="font-semibold text-gray-700 dark:text-gray-200">
                 Quick actions
               </h4>
               <div className="mt-3 flex flex-col gap-2">
@@ -272,17 +302,46 @@ export default function SingleBlogDisplay({ slug }: Props) {
                     }
 
                     try {
-                      await navigator.clipboard.writeText(window.location.href);
+                      await navigator.clipboard.writeText(
+                        typeof window !== "undefined" ? window.location.href : ""
+                      );
                       alert("Link copied!");
                     } catch (err) {
                       console.error(err);
                       alert("Failed to copy link");
                     }
                   }}
-                  className="px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+                  className="w-full px-3 py-2 rounded border text-sm hover:cursor-pointer hover:bg-blue-500 hover:text-white"
+                  aria-label="Copy link"
                 >
                   Copy link
                 </button>
+
+                {/* Sign in/out CTA if visitor */}
+                {!isSignedIn ? (
+                  <SignInButton mode="modal">
+                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white">
+                      Sign in to comment
+                    </button>
+                  </SignInButton>
+                ) : (
+                  <SignOutButton>
+                    <button className="w-full px-3 py-2 rounded border text-sm hover:bg-blue-500 hover:text-white">
+                      Sign out
+                    </button>
+                  </SignOutButton>
+                )}
+              </div>
+            </div>
+
+            {/* Optionally other widgets */}
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm text-sm text-gray-600">
+              <h4 className="font-semibold text-gray-700 dark:text-gray-200">
+                About the author
+              </h4>
+              <div className="mt-2">
+                <div className="font-medium">{blog.author?.username ?? "Unknown"}</div>
+                <div className="text-xs text-gray-500">{blog.author?.email ?? ""}</div>
               </div>
             </div>
           </aside>

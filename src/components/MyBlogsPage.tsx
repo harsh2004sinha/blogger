@@ -105,12 +105,6 @@ const MyBlogsPage: React.FC = () => {
             >
               + New Blog
             </button>
-
-            <SignOutButton>
-              <button className="px-4 py-2 rounded-lg border-white text-gray-100 dark:text-gray-200 hover:bg-gray-100 hover:text-black hover:cursor-pointer dark:hover:bg-gray-700 transition">
-                Sign out
-              </button>
-            </SignOutButton>
           </div>
         </div>
 
