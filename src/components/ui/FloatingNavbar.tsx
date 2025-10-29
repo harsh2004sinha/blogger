@@ -141,7 +141,7 @@ export const FloatingNav = ({
           <SignedOut>
             <SignInButton>
               <button
-                className={`${pillBtn} border border-neutral-200 dark:border-white/[0.08] text-black dark:text-white bg-white hover:bg-blue-700 hover:text-white`}
+                className={`${pillBtn} border border-neutral-200 dark:border-white/[0.08] text-black dark:text-white bg-black hover:bg-blue-700 hover:text-white`}
               >
                 <span>Login</span>
                 <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
@@ -150,7 +150,7 @@ export const FloatingNav = ({
 
             <SignUpButton>
               <button
-                className={`${pillBtn} border border-neutral-200 dark:border-white/[0.08] text-black dark:text-white bg-white hover:bg-blue-700 hover:text-white`}
+                className={`${pillBtn} border border-neutral-200 dark:border-white/[0.08] text-black dark:text-white bg-black hover:bg-blue-700 hover:text-white`}
               >
                 <span>SignUp</span>
                 <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />

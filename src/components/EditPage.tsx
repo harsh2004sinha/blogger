@@ -166,7 +166,7 @@ export default function EditBlogPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 pb-12 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#141E30] to-[#243B55] pb-12 p-6">
         <div className="mx-auto pt-24 max-w-6xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">

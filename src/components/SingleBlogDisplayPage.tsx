@@ -111,7 +111,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-blue-500 to-gray-700">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-[#141E30] to-[#243B55]">
         <div className="max-w-2xl text-center">
           <h2 className="text-2xl font-semibold mb-2">Post not found</h2>
           <p className="text-gray-200 mb-6">
@@ -144,7 +144,7 @@ export default function SingleBlogDisplay({ slug }: Props) {
   }
 
   return (
-    <article className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-8 px-4 sm:px-6 lg:px-8">
+    <article className="min-h-screen bg-gradient-to-br from-[#141E30] to-[#243B55] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-700 dark:text-gray-300 mb-4 mt-16">

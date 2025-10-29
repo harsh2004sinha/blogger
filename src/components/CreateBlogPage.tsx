@@ -175,7 +175,7 @@ export default function CreateBlogPage() {
   }
 
   return (
-    <div className="bg-gradient-to-b from-blue-500 to-gray-700 min-h-screen pb-12">
+    <div className="bg-gradient-to-br from-[#141E30] to-[#243B55] min-h-screen pb-12">
       <form
         onSubmit={handleSubmit}
         className="mx-auto pt-36 max-w-6xl px-6"

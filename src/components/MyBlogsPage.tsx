@@ -82,15 +82,15 @@ const MyBlogsPage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-16 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#141E30] to-[#243B55] py-16 px-6">
       <div className="max-w-7xl mx-auto mt-24">
         {/* HEADER */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white font-sans">
               My Blogs
             </h1>
-            <p className="text-sm text-gray-100 dark:text-gray-300">
+            <p className="text-sm text-gray-100 dark:text-gray-300 font-sans">
               Signed in as{" "}
               <span className="font-medium">
                 {user?.firstName || user?.primaryEmailAddress?.emailAddress}
@@ -186,13 +186,13 @@ const MyBlogsPage: React.FC = () => {
                             e.stopPropagation();
                             router.push(`/blogs/${b.slug}/edit`)
                           }}
-                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-700"
+                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-blue-600 hover:bg-blue-200"
                         >
                           Edit
                         </button>
                         <button
                           onClick={(e) => handleDelete(e, b.slug, b.title)}
-                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-red-700 hover:bg-red-200 dark:hover:bg-gray-700"
+                          className="px-3 py-1 border rounded-md text-xs hover:cursor-pointer text-red-700 hover:bg-red-200"
                         >
                           Delete
                         </button>

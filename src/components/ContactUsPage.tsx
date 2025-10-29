@@ -94,10 +94,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 pt-32 dark:from-gray-900 dark:to-gray-800 py-12 px-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-200 to-indigo-100 pt-32 dark:from-gray-900 dark:to-gray-700 py-12 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* LEFT: FORM */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow p-6">
+        <div className="lg:col-span-2 bg-white dark:bg-black border border-gray-100 dark:border-gray-700 rounded-2xl shadow p-6">
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Contact Us</h2>
           <p className="text-sm text-gray-500 dark:text-gray-300 mt-1">
             Have a question or want to collaborate? Send us a message — we’ll get back within 1-2 business days.
@@ -296,7 +296,7 @@ export default function ContactPage() {
 
         {/* RIGHT: contact info + map */}
         <aside className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-4 shadow">
+          <div className="bg-white dark:bg-black border border-gray-100 dark:border-gray-700 rounded-2xl p-4 shadow">
             <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Contact Info</h4>
             <div className="mt-3 text-sm text-gray-600 dark:text-gray-300 space-y-2">
               <div><span className="font-medium">Email:</span> support@example.com</div>
@@ -311,7 +311,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl overflow-hidden shadow">
+          <div className="bg-white dark:bg-black border border-gray-100 dark:border-gray-700 rounded-2xl overflow-hidden shadow">
             <div className="h-40 w-full">
               {/* Placeholder map — replace src with your Google Maps embed if needed */}
               <iframe
@@ -326,7 +326,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-4 shadow text-sm text-gray-600 dark:text-gray-300">
+          <div className="bg-white dark:bg-black border border-gray-100 dark:border-gray-700 rounded-2xl p-4 shadow text-sm text-gray-600 dark:text-gray-300">
             <strong>Working hours:</strong>
             <div className="mt-1">Mon–Fri: 9:00 AM — 6:00 PM</div>
             <div className="mt-2 text-xs">We reply to most messages within 24–48 hours.</div>

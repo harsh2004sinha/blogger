@@ -75,14 +75,16 @@ export default function BlogsPage() {
     "https://thumbs.dreamstime.com/z/default-avatar-profile-flat-icon-social-media-user-vector-portrait-unknown-human-image-default-avatar-profile-flat-icon-184330869.jpg?ct=jpeg";
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-500 to-gray-700 py-12">
+    <main
+      className="min-h-screen bg-gradient-to-br from-[#141E30] to-[#243B55] py-12"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
         <header className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">
+            <h1 className="text-3xl font-extrabold font-sans text-slate-200">
               Latest Blogs
             </h1>
-            <p className="mt-1 text-sm text-slate-200">
+            <p className="mt-1 text-sm text-slate-200 font-sans">
               Handpicked posts across categories.
             </p>
           </div>
